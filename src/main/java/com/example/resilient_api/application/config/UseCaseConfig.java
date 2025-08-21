@@ -1,5 +1,7 @@
 package com.example.resilient_api.application.config;
 
+import com.example.resilient_api.domain.model.gateways.SucursalRepository;
+import com.example.resilient_api.domain.usecase.AddProductoToSucursalUseCase;
 import com.example.resilient_api.domain.usecase.AddSucursalToFranchiseUseCase;
 import com.example.resilient_api.domain.usecase.CreateFranchiseUseCase;
 import com.example.resilient_api.domain.model.gateways.FranchiseRepository;
@@ -17,6 +19,11 @@ public class UseCaseConfig {
     @Bean
     public AddSucursalToFranchiseUseCase addSucursalToFranchiseUseCase(FranchiseRepository repository) {
         return new AddSucursalToFranchiseUseCase(repository);
+    }
+
+    @Bean
+    public AddProductoToSucursalUseCase addProductToSucursalUseCase(SucursalRepository repository) {
+        return new AddProductoToSucursalUseCase(repository);
     }
 
 }
