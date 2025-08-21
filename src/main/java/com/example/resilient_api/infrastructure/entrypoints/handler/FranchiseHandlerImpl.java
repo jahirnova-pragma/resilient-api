@@ -25,7 +25,7 @@ public class FranchiseHandlerImpl {
 
     public Mono<ServerResponse> createFranchise(ServerRequest request) {
         return request.bodyToMono(Franchise.class)
-                .flatMap(createFranchiseUseCase::createFranchise)
+                .flatMap(createFranchiseUseCase::execute)
                 .flatMap(franchise -> {
                     APIResponse<Franchise> response = APIResponse.<Franchise>builder()
                             .code("201")

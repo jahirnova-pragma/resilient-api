@@ -5,6 +5,7 @@ import com.example.resilient_api.domain.usecase.AddProductoToSucursalUseCase;
 import com.example.resilient_api.domain.usecase.AddSucursalToFranchiseUseCase;
 import com.example.resilient_api.domain.usecase.CreateFranchiseUseCase;
 import com.example.resilient_api.domain.model.gateways.FranchiseRepository;
+import com.example.resilient_api.domain.usecase.RemoveProductFromSucursalUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +25,11 @@ public class UseCaseConfig {
     @Bean
     public AddProductoToSucursalUseCase addProductToSucursalUseCase(SucursalRepository repository) {
         return new AddProductoToSucursalUseCase(repository);
+    }
+
+    @Bean
+    public RemoveProductFromSucursalUseCase removeProductFromSucursalUseCase(SucursalRepository repository) {
+        return new RemoveProductFromSucursalUseCase(repository);
     }
 
 }

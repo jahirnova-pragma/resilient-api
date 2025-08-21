@@ -11,7 +11,7 @@ public class CreateFranchiseUseCase {
 
     private final FranchiseRepository  franchiseRepository;
 
-    public Mono<Franchise> createFranchise(Franchise franchise) {
+    public Mono<Franchise> execute(Franchise franchise) {
         Franchise newFranchise = franchise.toBuilder()
                 .id(UUID.randomUUID().toString())
                 .build();
