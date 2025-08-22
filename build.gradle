@@ -27,6 +27,7 @@ dependencies {
 	// Cliente DynamoDB asincrónico (usado con WebFlux/Reactor)
 	implementation "software.amazon.awssdk:dynamodb"
 	implementation "software.amazon.awssdk:dynamodb-enhanced"
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'

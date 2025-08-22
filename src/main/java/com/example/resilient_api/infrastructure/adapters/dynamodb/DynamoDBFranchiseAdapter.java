@@ -31,6 +31,7 @@ public class DynamoDBFranchiseAdapter implements FranchiseRepository {
         FranchiseEntity entity = FranchiseEntity.builder()
                 .id(franchise.getId())
                 .nombre(franchise.getNombre())
+                .sucursales(franchise.getSucursales())
                 .build();
 
         return Mono.fromFuture(() -> getTable().putItem(entity))

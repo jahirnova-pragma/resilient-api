@@ -13,6 +13,7 @@ public class CreateFranchiseUseCase {
 
     public Mono<Franchise> execute(Franchise franchise) {
         Franchise newFranchise = franchise.toBuilder()
+                .nombre(franchise.getNombre())
                 .id(UUID.randomUUID().toString())
                 .build();
 

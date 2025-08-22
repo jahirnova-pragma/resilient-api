@@ -33,4 +33,13 @@ public class DynamoDBConfig {
     public DynamoDbAsyncTable<SucursalEntity> sucursalTable(DynamoDbEnhancedAsyncClient enhancedAsyncClient) {
         return enhancedAsyncClient.table("Sucursal", TableSchema.fromBean(SucursalEntity.class));
     }
+
+    @Bean
+    public DynamoDbAsyncTable<ProductEntity> productTable(DynamoDbAsyncClient dynamoDbClient) {
+        return DynamoDbEnhancedAsyncClient.builder()
+                .dynamoDbClient(dynamoDbClient)
+                .build()
+                .table("Product", TableSchema.fromBean(ProductEntity.class));
+    }
+
 }

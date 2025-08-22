@@ -8,11 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 @SpringBootTest(classes = ResilientApiApplication.class)
 class ResilientApiApplicationTests {
 
-	@MockBean
-	private UserPersistencePort userPersistencePort;
 
-	@Autowired
-	private UserUseCase userUseCase;
 
 	@Test
 	void contextLoads() {

@@ -6,10 +6,13 @@ import com.example.resilient_api.domain.model.gateways.SucursalRepository;
 import com.example.resilient_api.infrastructure.entrypoints.mapper.SucursalMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncTable;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Repository
@@ -33,4 +36,15 @@ public class DynamoDBSucursalAdapter implements SucursalRepository {
         return Mono.fromFuture(future)
                 .map(SucursalMapper::toDomain);
     }
+
+    @Override
+    public Flux<Sucursal> findByIds(List<String> sucursalIds) {
+        return Flux.fromIterable(sucursalIds)
+                .flatMap(id -> Mono.fromFuture(() ->
+                        sucursalTable.getItem(r -> r.key(k -> k.partitionValue(id)))
+                ))
+                .filter(s -> s != null)
+                .map(SucursalMapper::toDomain);
+    }
+
 }

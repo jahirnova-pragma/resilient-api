@@ -5,6 +5,8 @@ import com.example.resilient_api.domain.model.gateways.FranchiseRepository;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+
 @RequiredArgsConstructor
 public class AddSucursalToFranchiseUseCase {
 
@@ -16,6 +18,8 @@ public class AddSucursalToFranchiseUseCase {
                 .flatMap(franchise -> {
                     if (franchise.getSucursales() == null) {
                         franchise.setSucursales(new java.util.ArrayList<>());
+                    } else {
+                        franchise.setSucursales(new ArrayList<>(franchise.getSucursales()));
                     }
 
                     if (!franchise.getSucursales().contains(sucursalId)) {
