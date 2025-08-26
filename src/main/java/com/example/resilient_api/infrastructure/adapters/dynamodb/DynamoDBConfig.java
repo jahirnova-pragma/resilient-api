@@ -14,13 +14,17 @@ public class DynamoDBConfig {
 
     @Bean
     public DynamoDbAsyncClient dynamoDbAsyncClient() {
-        return DynamoDbAsyncClient.builder()
-                // 👇 si usas DynamoDB local, deja el endpoint
-                .endpointOverride(URI.create("http://localhost:8000"))
-                // región dummy si es local
-                .region(software.amazon.awssdk.regions.Region.US_EAST_1)
-                .build();
+        var builder = DynamoDbAsyncClient.builder()
+                .region(software.amazon.awssdk.regions.Region.US_EAST_1);
+
+        String endpoint = System.getenv("DYNAMODB_ENDPOINT");
+        if (endpoint != null && !endpoint.isEmpty()) {
+            builder.endpointOverride(URI.create(endpoint));
+        }
+
+        return builder.build();
     }
+
 
     @Bean
     public DynamoDbEnhancedAsyncClient dynamoDbEnhancedAsyncClient(DynamoDbAsyncClient dynamoDbAsyncClient) {
