@@ -12,7 +12,7 @@ env:
   CLUSTER_NAME: resilient-api-cluster
   SERVICE_NAME: resilient-api-service
   TASK_FAMILY: resilient-api-task
-  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_TAG: latest
 
 
 jobs:
