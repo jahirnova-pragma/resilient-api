@@ -78,17 +78,20 @@ jobs:
         run: |
           TASK_DEF=$(aws ecs describe-task-definition \
             --task-definition ${{ env.TASK_FAMILY }} \
-            --query taskDefinition \
-            --region ${{ env.AWS_REGION }})
-
+            --region ${{ env.AWS_REGION }} \
+            | jq '.taskDefinition')
+          
+          # Reemplazar la imagen en containerDefinitions[0]
           NEW_TASK_DEF=$(echo $TASK_DEF | jq --arg IMAGE "$ECR_URI" \
-            '.containerDefinitions[0].image=$IMAGE')
-
+            '.containerDefinitions[0].image=$IMAGE
+             | {family, taskRoleArn, executionRoleArn, networkMode, containerDefinitions, volumes, placementConstraints, requiresCompatibilities, cpu, memory}')
+          
           echo $NEW_TASK_DEF > new-task-def.json
-
+          
           aws ecs register-task-definition \
             --cli-input-json file://new-task-def.json \
             --region ${{ env.AWS_REGION }}
+
 
       # 8. Forzar nuevo despliegue en ECS
       - name: Force new ECS deployment
