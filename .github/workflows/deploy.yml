@@ -71,7 +71,8 @@ jobs:
           echo "Building image: $ECR_URI"
           docker build -t $ECR_URI .
           docker push $ECR_URI
-          echo "ECR_URI=$ECR_URI" >> $GITHUB_ENV
+          echo "ECR_URI=$ECR_URI" >> $GITHUB_ENV   # <- Para usar en pasos siguientes
+
 
       # 7. Actualizar ECS Task Definition
       - name: Update ECS Task Definition
@@ -80,17 +81,17 @@ jobs:
             --task-definition ${{ env.TASK_FAMILY }} \
             --region ${{ env.AWS_REGION }} \
             | jq '.taskDefinition')
-          
-          # Reemplazar la imagen en containerDefinitions[0]
+
           NEW_TASK_DEF=$(echo $TASK_DEF | jq --arg IMAGE "$ECR_URI" \
             '.containerDefinitions[0].image=$IMAGE
              | {family, taskRoleArn, executionRoleArn, networkMode, containerDefinitions, volumes, placementConstraints, requiresCompatibilities, cpu, memory}')
-          
+
           echo $NEW_TASK_DEF > new-task-def.json
-          
+
           aws ecs register-task-definition \
             --cli-input-json file://new-task-def.json \
             --region ${{ env.AWS_REGION }}
+
 
 
       # 8. Forzar nuevo despliegue en ECS
