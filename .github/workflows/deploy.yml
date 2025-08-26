@@ -7,7 +7,7 @@ on:
       - feature/add_franchies_and_sucursal
 
 env:
-  AWS_REGION: us-east-2
+  AWS_REGION: us-east-1
   ECR_REPO: resilient-api
   CLUSTER_NAME: resilient-api-cluster
   SERVICE_NAME: resilient-api-service
