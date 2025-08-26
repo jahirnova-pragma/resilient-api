@@ -6,9 +6,13 @@ on:
       - main
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: us-east-2
   ECR_REPO: resilient-api
-  TF_DIR: infra # carpeta donde tengas tus .tf (cámbiala si usas otra)
+  CLUSTER_NAME: resilient-api-cluster
+  SERVICE_NAME: resilient-api-service
+  TASK_FAMILY: resilient-api-task
+  IMAGE_TAG: ${{ github.sha }}
+
 
 jobs:
   deploy:
@@ -26,7 +30,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Configurar Gradle
+      # 3. Cache Gradle
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -61,18 +65,30 @@ jobs:
           echo "Building image: $ECR_URI"
           docker build -t $ECR_URI .
           docker push $ECR_URI
+          echo "ECR_URI=$ECR_URI" >> $GITHUB_ENV
 
-      # 7. Configurar Terraform
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.9.5
+      # 7. Actualizar ECS Task Definition
+      - name: Update ECS Task Definition
+        run: |
+          TASK_DEF=$(aws ecs describe-task-definition \
+            --task-definition ${{ env.TASK_FAMILY }} \
+            --query taskDefinition \
+            --region ${{ env.AWS_REGION }})
 
-      # 8. Terraform Init & Apply
-      - name: Terraform Init
-        working-directory: ${{ env.TF_DIR }}
-        run: terraform init
+          NEW_TASK_DEF=$(echo $TASK_DEF | jq --arg IMAGE "$ECR_URI" \
+            '.containerDefinitions[0].image=$IMAGE')
 
-      - name: Terraform Apply
-        working-directory: ${{ env.TF_DIR }}
-        run: terraform apply -auto-approve
+          echo $NEW_TASK_DEF > new-task-def.json
+
+          aws ecs register-task-definition \
+            --cli-input-json file://new-task-def.json \
+            --region ${{ env.AWS_REGION }}
+
+      # 8. Forzar nuevo despliegue en ECS
+      - name: Force new ECS deployment
+        run: |
+          aws ecs update-service \
+            --cluster ${{ env.CLUSTER_NAME }} \
+            --service ${{ env.SERVICE_NAME }} \
+            --force-new-deployment \
+            --region ${{ env.AWS_REGION }}
