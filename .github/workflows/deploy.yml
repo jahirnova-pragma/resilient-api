@@ -101,3 +101,20 @@ jobs:
             --service ${{ env.SERVICE_NAME }} \
             --force-new-deployment \
             --region ${{ env.AWS_REGION }}
+
+      # 9. Obtener la URL del ALB
+      - name: Get ALB URL
+        id: get-alb
+        run: |
+          ALB_DNS=$(aws elbv2 describe-load-balancers \
+            --names resilient-api-alb \
+            --query "LoadBalancers[0].DNSName" \
+            --output text \
+            --region ${{ env.AWS_REGION }})
+          echo "ALB_URL=http://$ALB_DNS" >> $GITHUB_ENV
+          echo "ALB_URL=http://$ALB_DNS"
+
+      # 10. Mostrar URL como output del job
+      - name: Set output
+        run: |
+          echo "url=$ALB_URL" >> $GITHUB_OUTPUT
