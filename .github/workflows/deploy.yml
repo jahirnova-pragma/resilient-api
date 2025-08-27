@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/add_franchies_and_sucursal
 
 env:
   AWS_REGION: us-east-1
