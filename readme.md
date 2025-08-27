@@ -115,148 +115,19 @@ cd resilient_api
 
 ---
 
-## ▶️ Ejecutar localmente
+### 📡 Endpoints principales
 
-```bash
-./gradlew bootRun
-```
-
----
-
-## 📡 Endpoints principales
-
-### Franquicias
-
-#### Crear franquicia
-- **POST** `/franchises`
-- **Request:**
-```json
-{
-  "name": "Franquicia ABC"
-}
-```
-- **Response 201:**
-```json
-{
-  "id": "fran-001",
-  "name": "Franquicia ABC",
-  "branchs": []
-}
-```
-
-#### Agregar branch
-- **POST** `/franchises/{id}/branchs`
-- **Request:**
-```json
-{
-  "name": "Sucursal Norte"
-}
-```
-- **Response 200:**
-```json
-{
-  "id": "suc-001",
-  "name": "Sucursal Norte"
-}
-```
-
-#### Obtener producto con mayor stock
-- **GET** `/franchises/{id}/max-stock`
-- **Response 200:**
-```json
-{
-  "productId": "prod-123",
-  "name": "Producto X",
-  "stock": 500,
-  "branchId": "suc-001"
-}
-```
-
-#### Actualizar nombre de franquicia
-- **PATCH** `/franchises/{id}`
-- **Request:**
-```json
-{
-  "name": "Franquicia Actualizada"
-}
-```
-- **Response 200:**
-```json
-{
-  "id": "fran-001",
-  "name": "Franquicia Actualizada"
-}
-```
+- Los endpoints principales están documentados en este repo: [testNequiTerraform](https://github.com/jahirnova-pragma/testNequiTerraform)
+- Encontrarás la carpeta **Postman** y la documentación de **Swagger** dentro del proyecto.
 
 ---
 
-### Productos
 
-#### Actualizar stock de un producto
-- **PUT** `/products/{productId}/stock/{stock}`
-- **Response 200:**
-```json
-{
-  "productId": "prod-123",
-  "stock": 1000
-}
-```
+### 🚀 Despliegue Local y AWS
 
-#### Actualizar nombre de producto
-- **PATCH** `/products/{id}`
-- **Request:**
-```json
-{
-  "name": "Producto Nuevo"
-}
-```
-- **Response 200:**
-```json
-{
-  "id": "prod-123",
-  "name": "Producto Nuevo"
-}
-```
-
----
-
-### Sucursales
-
-#### Agregar producto a una branch
-- **POST** `/branchs/{branchId}/products/{productoId}`
-- **Response 200:**
-```json
-{
-  "branchId": "suc-001",
-  "productoId": "prod-123"
-}
-```
-
-#### Eliminar producto de una branch
-- **DELETE** `/branchs/{branchId}/products/{productoId}`
-- **Response 200:**
-```json
-{
-  "message": "Producto eliminado correctamente"
-}
-```
-
-#### Actualizar nombre de branch
-- **PATCH** `/branchs/{id}`
-- **Request:**
-```json
-{
-  "name": "Sucursal Actualizada"
-}
-```
-- **Response 200:**
-```json
-{
-  "id": "suc-001",
-  "name": "Sucursal Actualizada"
-}
-```
-
+- El despliegue loca y de terraform para AWS lo encontraras en el siguiente repo: [testNequiTerraform](https://github.com/jahirnova-pragma/testNequiTerraform),
+alli encontrarás la carpeta **Local** y **Terraform**  ademas de la documentacion de como ejecutar
+- Los despliegues se hacen automaticos al subir cambios a main
 ---
 
 ## 🧪 Ejecutar pruebas
