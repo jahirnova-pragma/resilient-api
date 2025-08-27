@@ -1,11 +1,10 @@
 package com.example.resilient_api.infrastructure.entrypoints.handler;
 
-import com.example.resilient_api.domain.model.Sucursal;
-import com.example.resilient_api.domain.usecase.AddProductoToSucursalUseCase;
-import com.example.resilient_api.domain.usecase.RemoveProductFromSucursalUseCase;
-import com.example.resilient_api.domain.usecase.UpdateSucursalNameUseCase;
-import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateSucursalNameRequest;
-import com.example.resilient_api.infrastructure.entrypoints.util.APIResponse;
+import com.example.resilient_api.domain.model.Branch;
+import com.example.resilient_api.domain.usecase.AddProductToBranchUseCase;
+import com.example.resilient_api.domain.usecase.RemoveProductFromBranchUseCase;
+import com.example.resilient_api.domain.usecase.UpdateBranchNameUseCase;
+import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateBranchNameRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,24 +20,24 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-public class SucursalHandlerImplTest {
+public class BranchHandlerImplTest {
 
-    private static final String SUCURSAL_ID = "SUC-001";
+    private static final String BRANCH_ID = "SUC-001";
     private static final String PRODUCT_ID = "PROD-001";
     private static final String NEW_NAME = "Sucursal Central";
     private static final String EMPTY_NAME = "   ";
 
     @Mock
-    private AddProductoToSucursalUseCase addProductoToSucursalUseCase;
+    private AddProductToBranchUseCase addProductToBranchUseCase;
 
     @Mock
-    private RemoveProductFromSucursalUseCase removeProductFromSucursalUseCase;
+    private RemoveProductFromBranchUseCase removeProductFromBranchUseCase;
 
     @Mock
-    private UpdateSucursalNameUseCase updateSucursalNameUseCase;
+    private UpdateBranchNameUseCase updateBranchNameUseCase;
 
     @InjectMocks
-    private SucursalHandlerImpl sucursalHandler;
+    private BranchHandlerImpl branchHandler;
 
     private WebTestClient webTestClient;
 
@@ -47,39 +46,39 @@ public class SucursalHandlerImplTest {
         MockitoAnnotations.openMocks(this);
         webTestClient = WebTestClient.bindToRouterFunction(
                 RouterFunctions.route()
-                        .POST("/sucursales/{sucursalId}/productos/{productoId}", sucursalHandler::addProducto)
-                        .DELETE("/sucursales/{sucursalId}/productos/{productId}", sucursalHandler::removeProduct)
-                        .PATCH("/sucursales/{id}", sucursalHandler::updateSucursalName)
+                        .POST("/branchs/{branchId}/productos/{productoId}", branchHandler::addProducto)
+                        .DELETE("/branchs/{branchId}/productos/{productId}", branchHandler::removeProduct)
+                        .PATCH("/branchs/{id}", branchHandler::updateBranchName)
                         .build()
         ).build();
     }
 
-    private Sucursal buildSucursal(String id, String name) {
-        return new Sucursal(id, name, List.of(PRODUCT_ID));
+    private Branch buildBranch(String id, String name) {
+        return new Branch(id, name, List.of(PRODUCT_ID));
     }
 
     @Test
     void shouldAddProductoSuccessfully() {
-        Sucursal sucursal = buildSucursal(SUCURSAL_ID, NEW_NAME);
+        Branch branch = buildBranch(BRANCH_ID, NEW_NAME);
 
-        when(addProductoToSucursalUseCase.execute(SUCURSAL_ID, PRODUCT_ID)).thenReturn(Mono.just(sucursal));
+        when(addProductToBranchUseCase.execute(BRANCH_ID, PRODUCT_ID)).thenReturn(Mono.just(branch));
 
         webTestClient.post()
-                .uri("/sucursales/{sucursalId}/productos/{productoId}", SUCURSAL_ID, PRODUCT_ID)
+                .uri("/branchs/{branchId}/productos/{productoId}", BRANCH_ID, PRODUCT_ID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.code").isEqualTo("200")
-                .jsonPath("$.identifier").isEqualTo(SUCURSAL_ID);
+                .jsonPath("$.identifier").isEqualTo(BRANCH_ID);
     }
 
     @Test
     void shouldReturnInternalServerErrorWhenAddProductoFails() {
-        when(addProductoToSucursalUseCase.execute(SUCURSAL_ID, PRODUCT_ID))
+        when(addProductToBranchUseCase.execute(BRANCH_ID, PRODUCT_ID))
                 .thenReturn(Mono.error(new RuntimeException("DB error")));
 
         webTestClient.post()
-                .uri("/sucursales/{sucursalId}/productos/{productoId}", SUCURSAL_ID, PRODUCT_ID)
+                .uri("/branchs/{branchId}/productos/{productoId}", BRANCH_ID, PRODUCT_ID)
                 .exchange()
                 .expectStatus().is5xxServerError()
                 .expectBody()
@@ -89,25 +88,25 @@ public class SucursalHandlerImplTest {
 
     @Test
     void shouldRemoveProductoSuccessfully() {
-        Sucursal sucursal = buildSucursal(SUCURSAL_ID, NEW_NAME);
+        Branch branch = buildBranch(BRANCH_ID, NEW_NAME);
 
-        when(removeProductFromSucursalUseCase.execute(SUCURSAL_ID, PRODUCT_ID)).thenReturn(Mono.just(sucursal));
+        when(removeProductFromBranchUseCase.execute(BRANCH_ID, PRODUCT_ID)).thenReturn(Mono.just(branch));
 
         webTestClient.delete()
-                .uri("/sucursales/{sucursalId}/productos/{productId}", SUCURSAL_ID, PRODUCT_ID)
+                .uri("/branchs/{branchId}/productos/{productId}", BRANCH_ID, PRODUCT_ID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(SUCURSAL_ID);
+                .jsonPath("$.id").isEqualTo(BRANCH_ID);
     }
 
     @Test
     void shouldReturnBadRequestWhenRemoveProductoFails() {
-        when(removeProductFromSucursalUseCase.execute(SUCURSAL_ID, PRODUCT_ID))
+        when(removeProductFromBranchUseCase.execute(BRANCH_ID, PRODUCT_ID))
                 .thenReturn(Mono.error(new IllegalArgumentException("Product not found")));
 
         webTestClient.delete()
-                .uri("/sucursales/{sucursalId}/productos/{productId}", SUCURSAL_ID, PRODUCT_ID)
+                .uri("/branchs/{branchId}/productos/{productId}", BRANCH_ID, PRODUCT_ID)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
@@ -116,28 +115,28 @@ public class SucursalHandlerImplTest {
     }
 
     @Test
-    void shouldUpdateSucursalNameSuccessfully() {
-        Sucursal sucursal = buildSucursal(SUCURSAL_ID, NEW_NAME);
+    void shouldUpdateBranchNameSuccessfully() {
+        Branch branch = buildBranch(BRANCH_ID, NEW_NAME);
 
-        when(updateSucursalNameUseCase.execute(SUCURSAL_ID, NEW_NAME)).thenReturn(Mono.just(sucursal));
+        when(updateBranchNameUseCase.execute(BRANCH_ID, NEW_NAME)).thenReturn(Mono.just(branch));
 
         webTestClient.patch()
-                .uri("/sucursales/{id}", SUCURSAL_ID)
+                .uri("/branchs/{id}", BRANCH_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(new UpdateSucursalNameRequest(NEW_NAME)))
+                .body(BodyInserters.fromValue(new UpdateBranchNameRequest(NEW_NAME)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.code").isEqualTo("200")
-                .jsonPath("$.identifier").isEqualTo(SUCURSAL_ID);
+                .jsonPath("$.identifier").isEqualTo(BRANCH_ID);
     }
 
     @Test
     void shouldReturnBadRequestWhenNameIsBlank() {
         webTestClient.patch()
-                .uri("/sucursales/{id}", SUCURSAL_ID)
+                .uri("/branchs/{id}", BRANCH_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(new UpdateSucursalNameRequest(EMPTY_NAME)))
+                .body(BodyInserters.fromValue(new UpdateBranchNameRequest(EMPTY_NAME)))
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
@@ -146,13 +145,13 @@ public class SucursalHandlerImplTest {
 
     @Test
     void shouldReturnInternalServerErrorWhenUpdateNameFails() {
-        when(updateSucursalNameUseCase.execute(SUCURSAL_ID, NEW_NAME))
+        when(updateBranchNameUseCase.execute(BRANCH_ID, NEW_NAME))
                 .thenReturn(Mono.error(new RuntimeException("DB error")));
 
         webTestClient.patch()
-                .uri("/sucursales/{id}", SUCURSAL_ID)
+                .uri("/branchs/{id}", BRANCH_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(new UpdateSucursalNameRequest(NEW_NAME)))
+                .body(BodyInserters.fromValue(new UpdateBranchNameRequest(NEW_NAME)))
                 .exchange()
                 .expectStatus().is5xxServerError()
                 .expectBody()

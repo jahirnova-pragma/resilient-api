@@ -3,7 +3,7 @@ package com.example.resilient_api.domain.usecase;
 import com.example.resilient_api.domain.model.Product;
 import com.example.resilient_api.domain.model.gateways.FranchiseRepository;
 import com.example.resilient_api.domain.model.gateways.ProductRepository;
-import com.example.resilient_api.domain.model.gateways.SucursalRepository;
+import com.example.resilient_api.domain.model.gateways.BranchRepository;
 import com.example.resilient_api.infrastructure.entrypoints.dto.BranchWithMaxProductDTO;
 import com.example.resilient_api.infrastructure.entrypoints.dto.FranchiseMaxStockDTO;
 import com.example.resilient_api.infrastructure.entrypoints.dto.ProductDTO;
@@ -18,13 +18,13 @@ import java.util.Comparator;
 public class GetMaxStockPerBranchUseCase {
 
     private final FranchiseRepository franchiseRepository;
-    private final SucursalRepository sucursalRepository;
+    private final BranchRepository branchRepository;
     private final ProductRepository productRepository;
 
     public Mono<FranchiseMaxStockDTO> execute(String franchiseId) {
         return franchiseRepository.findById(franchiseId)
                 .flatMap(franchise -> {
-                    if (franchise.getSucursales() == null || franchise.getSucursales().isEmpty()) {
+                    if (franchise.getBranchs() == null || franchise.getBranchs().isEmpty()) {
                         return Mono.just(FranchiseMaxStockDTO.builder()
                                 .id(franchise.getId())
                                 .name(franchise.getNombre())
@@ -32,7 +32,7 @@ public class GetMaxStockPerBranchUseCase {
                                 .build());
                     }
 
-                    return sucursalRepository.findByIds(franchise.getSucursales())
+                    return branchRepository.findByIds(franchise.getBranchs())
                             .flatMap(branch -> {
                                 if (branch.getProductos() == null || branch.getProductos().isEmpty()) {
                                     return Mono.just(BranchWithMaxProductDTO.builder()

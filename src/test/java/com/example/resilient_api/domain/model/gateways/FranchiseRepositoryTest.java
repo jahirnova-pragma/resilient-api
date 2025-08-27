@@ -1,7 +1,7 @@
 package com.example.resilient_api.domain.model.gateways;
 
+import com.example.resilient_api.domain.model.Branch;
 import com.example.resilient_api.domain.model.Franchise;
-import com.example.resilient_api.domain.model.Sucursal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,8 +18,8 @@ class FranchiseRepositoryTest {
 
     private static final String ID = "FR-01";
     private static final String NAME = "Franchise 1";
-    private static final String SUCURSAL_ID = "SUC-01";
-    private static final String SUCURSAL_NAME = "Sucursal 1";
+    private static final String BRANCH_ID = "SUC-01";
+    private static final String BRANCH_NAME = "Sucursal 1";
     private static final List<String> PRODUCTOS = List.of("PROD-01", "PROD-02");
 
     private FranchiseRepository repository;
@@ -53,14 +53,14 @@ class FranchiseRepositoryTest {
         return Franchise.builder()
                 .id(ID)
                 .nombre(NAME)
-                .sucursales(List.of(String.valueOf(buildSucursal())))
+                .branchs(List.of(String.valueOf(buildBranch())))
                 .build();
     }
 
-    private Sucursal buildSucursal() {
-        return Sucursal.builder()
-                .id(SUCURSAL_ID)
-                .nombre(SUCURSAL_NAME)
+    private Branch buildBranch() {
+        return Branch.builder()
+                .id(BRANCH_ID)
+                .nombre(BRANCH_NAME)
                 .productos(PRODUCTOS)
                 .build();
     }

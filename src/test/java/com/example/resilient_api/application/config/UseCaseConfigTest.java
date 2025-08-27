@@ -2,7 +2,7 @@ package com.example.resilient_api.application.config;
 
 import com.example.resilient_api.domain.model.gateways.FranchiseRepository;
 import com.example.resilient_api.domain.model.gateways.ProductRepository;
-import com.example.resilient_api.domain.model.gateways.SucursalRepository;
+import com.example.resilient_api.domain.model.gateways.BranchRepository;
 import com.example.resilient_api.domain.usecase.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ class UseCaseConfigTest {
     private FranchiseRepository franchiseRepository;
 
     @MockBean
-    private SucursalRepository sucursalRepository;
+    private BranchRepository branchRepository;
 
     @MockBean
     private ProductRepository productRepository;
@@ -26,11 +26,11 @@ class UseCaseConfigTest {
     @Autowired
     private CreateFranchiseUseCase createFranchiseUseCase;
     @Autowired
-    private AddSucursalToFranchiseUseCase addSucursalToFranchiseUseCase;
+    private AddBranchToFranchiseUseCase addBranchToFranchiseUseCase;
     @Autowired
-    private AddProductoToSucursalUseCase addProductoToSucursalUseCase;
+    private AddProductToBranchUseCase addProductToBranchUseCase;
     @Autowired
-    private RemoveProductFromSucursalUseCase removeProductFromSucursalUseCase;
+    private RemoveProductFromBranchUseCase removeProductFromBranchUseCase;
     @Autowired
     private UpdateProductStockUseCase updateProductStockUseCase;
     @Autowired
@@ -38,20 +38,20 @@ class UseCaseConfigTest {
     @Autowired
     private UpdateFranchiseNameUseCase updateFranchiseNameUseCase;
     @Autowired
-    private UpdateSucursalNameUseCase updateSucursalNameUseCase;
+    private UpdateBranchNameUseCase updateBranchNameUseCase;
     @Autowired
     private UpdateProductNameUseCase updateProductNameUseCase;
 
     @Test
     void shouldLoadAllUseCases() {
         assertThat(createFranchiseUseCase).isNotNull();
-        assertThat(addSucursalToFranchiseUseCase).isNotNull();
-        assertThat(addProductoToSucursalUseCase).isNotNull();
-        assertThat(removeProductFromSucursalUseCase).isNotNull();
+        assertThat(addBranchToFranchiseUseCase).isNotNull();
+        assertThat(addProductToBranchUseCase).isNotNull();
+        assertThat(removeProductFromBranchUseCase).isNotNull();
         assertThat(updateProductStockUseCase).isNotNull();
         assertThat(getMaxStockPerBranchUseCase).isNotNull();
         assertThat(updateFranchiseNameUseCase).isNotNull();
-        assertThat(updateSucursalNameUseCase).isNotNull();
+        assertThat(updateBranchNameUseCase).isNotNull();
         assertThat(updateProductNameUseCase).isNotNull();
     }
 }

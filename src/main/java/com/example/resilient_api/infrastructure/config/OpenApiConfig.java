@@ -15,7 +15,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Resilient API")
                         .version("1.0")
-                        .description("API para franquicias, sucursales y productos")
+                        .description("API para franquicias, branchs y productos")
                         .version("1.0.0")
                         .contact(new Contact().name("Andres Nova").email("andres.nova@example.com"))
 

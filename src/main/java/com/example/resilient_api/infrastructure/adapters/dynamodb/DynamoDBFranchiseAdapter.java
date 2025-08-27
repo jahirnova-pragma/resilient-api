@@ -1,7 +1,6 @@
 package com.example.resilient_api.infrastructure.adapters.dynamodb;
 
 import com.example.resilient_api.domain.model.Franchise;
-import com.example.resilient_api.domain.model.Sucursal;
 import com.example.resilient_api.domain.model.gateways.FranchiseRepository;
 import com.example.resilient_api.infrastructure.entrypoints.mapper.FranchiseMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +10,6 @@ import reactor.core.scheduler.Schedulers;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 @Repository
 @RequiredArgsConstructor
@@ -31,7 +26,7 @@ public class DynamoDBFranchiseAdapter implements FranchiseRepository {
         FranchiseEntity entity = FranchiseEntity.builder()
                 .id(franchise.getId())
                 .nombre(franchise.getNombre())
-                .sucursales(franchise.getSucursales())
+                .branchs(franchise.getBranchs())
                 .build();
 
         return Mono.fromFuture(() -> getTable().putItem(entity))

@@ -8,22 +8,22 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 
 @RequiredArgsConstructor
-public class AddSucursalToFranchiseUseCase {
+public class AddBranchToFranchiseUseCase {
 
     private final FranchiseRepository franchiseRepository;
 
-    public Mono<Franchise> execute(String franchiseId, String sucursalId) {
+    public Mono<Franchise> execute(String franchiseId, String branchId) {
         return franchiseRepository.findById(franchiseId)
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Franquicia no encontrada con id: " + franchiseId)))
                 .flatMap(franchise -> {
-                    if (franchise.getSucursales() == null) {
-                        franchise.setSucursales(new java.util.ArrayList<>());
+                    if (franchise.getBranchs() == null) {
+                        franchise.setBranchs(new java.util.ArrayList<>());
                     } else {
-                        franchise.setSucursales(new ArrayList<>(franchise.getSucursales()));
+                        franchise.setBranchs(new ArrayList<>(franchise.getBranchs()));
                     }
 
-                    if (!franchise.getSucursales().contains(sucursalId)) {
-                        franchise.getSucursales().add(sucursalId);
+                    if (!franchise.getBranchs().contains(branchId)) {
+                        franchise.getBranchs().add(branchId);
                     }
 
                     return franchiseRepository.save(franchise);

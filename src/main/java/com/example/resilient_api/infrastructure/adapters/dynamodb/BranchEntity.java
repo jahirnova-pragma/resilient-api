@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamoDbBean
-public class SucursalEntity {
+public class BranchEntity {
     private String id;
     private String nombre;
     private List<String> productos;

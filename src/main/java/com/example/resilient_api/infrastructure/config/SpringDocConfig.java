@@ -16,10 +16,10 @@ public class SpringDocConfig {
     }
 
     @Bean
-    public GroupedOpenApi sucursalApi() {
+    public GroupedOpenApi branchApi() {
         return GroupedOpenApi.builder()
-                .group("sucursales")
-                .pathsToMatch("/sucursales/**")
+                .group("branch")
+                .pathsToMatch("/branchs/**")
                 .build();
     }
 

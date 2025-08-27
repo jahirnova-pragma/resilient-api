@@ -12,7 +12,7 @@ public class FranchiseMapper {
         return Franchise.builder()
                 .id(entity.getId())
                 .nombre(entity.getNombre())
-                .sucursales(entity.getSucursales())
+                .branchs(entity.getBranchs())
                 .build();
     }
 
@@ -23,7 +23,7 @@ public class FranchiseMapper {
         return FranchiseEntity.builder()
                 .id(franchise.getId())
                 .nombre(franchise.getNombre())
-                .sucursales(franchise.getSucursales())
+                .branchs(franchise.getBranchs())
                 .build();
     }
 }

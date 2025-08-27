@@ -11,7 +11,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Sucursal {
+public class Branch {
     private String id;
     private String nombre;
     private List<String> productos;

@@ -1,11 +1,11 @@
 package com.example.resilient_api.infrastructure.entrypoints.handler;
 
 import com.example.resilient_api.domain.model.Franchise;
-import com.example.resilient_api.domain.usecase.AddSucursalToFranchiseUseCase;
+import com.example.resilient_api.domain.usecase.AddBranchToFranchiseUseCase;
 import com.example.resilient_api.domain.usecase.CreateFranchiseUseCase;
 import com.example.resilient_api.domain.usecase.GetMaxStockPerBranchUseCase;
 import com.example.resilient_api.domain.usecase.UpdateFranchiseNameUseCase;
-import com.example.resilient_api.infrastructure.entrypoints.dto.AddSucursalRequest;
+import com.example.resilient_api.infrastructure.entrypoints.dto.Branch;
 import com.example.resilient_api.infrastructure.entrypoints.dto.FranchiseMaxStockDTO;
 import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateFranchiseNameRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -29,13 +28,13 @@ class FranchiseHandlerImplTest {
     private static final String BASE_PATH = "/franchises";
     private static final String FRANCHISE_ID = "FRA-001";
     private static final String NEW_NAME = "New Franchise";
-    private static final String SUCURSAL_ID = "SUC-123";
+    private static final String BRANCH_ID = "SUC-123";
     private static final String ERROR_MESSAGE = "Error";
 
     @Mock
     private CreateFranchiseUseCase createFranchiseUseCase;
     @Mock
-    private AddSucursalToFranchiseUseCase addSucursalToFranchiseUseCase;
+    private AddBranchToFranchiseUseCase addBranchToFranchiseUseCase;
     @Mock
     private GetMaxStockPerBranchUseCase getMaxStockPerBranchUseCase;
     @Mock
@@ -52,7 +51,7 @@ class FranchiseHandlerImplTest {
         client = WebTestClient.bindToRouterFunction(
                 RouterFunctions.route()
                         .POST(BASE_PATH, handler::createFranchise)
-                        .POST(BASE_PATH + "/{" + "id" + "}/sucursales", handler::addSucursalToFranchise)
+                        .POST(BASE_PATH + "/{" + "id" + "}/branchs", handler::addBranchToFranchise)
                         .GET(BASE_PATH + "/{" + "id" + "}/max-stock", handler::getMaxStockPerBranch)
                         .PATCH(BASE_PATH + "/{" + "id" + "}", handler::updateFranchiseName)
                         .build()
@@ -83,14 +82,14 @@ class FranchiseHandlerImplTest {
     }
 
     @Test
-    void shouldAddSucursalSuccessfully() {
+    void shouldAddBranchSuccessfully() {
         Franchise franchise = Franchise.builder().id(FRANCHISE_ID).build();
-        when(addSucursalToFranchiseUseCase.execute(eq(FRANCHISE_ID), eq(SUCURSAL_ID))).thenReturn(Mono.just(franchise));
+        when(addBranchToFranchiseUseCase.execute(eq(FRANCHISE_ID), eq(BRANCH_ID))).thenReturn(Mono.just(franchise));
 
-        AddSucursalRequest request = new AddSucursalRequest();
-        request.setSucursalId(SUCURSAL_ID);
+        Branch request = new Branch();
+        request.setBranchId(BRANCH_ID);
 
-        client.post().uri(BASE_PATH + "/" + FRANCHISE_ID + "/sucursales")
+        client.post().uri(BASE_PATH + "/" + FRANCHISE_ID + "/branchs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
@@ -98,10 +97,10 @@ class FranchiseHandlerImplTest {
     }
 
     @Test
-    void shouldReturnBadRequestWhenSucursalIdIsMissing() {
-        AddSucursalRequest request = new AddSucursalRequest();
+    void shouldReturnBadRequestWhenBranchIdIsMissing() {
+        Branch request = new Branch();
 
-        client.post().uri(BASE_PATH + "/" + FRANCHISE_ID + "/sucursales")
+        client.post().uri(BASE_PATH + "/" + FRANCHISE_ID + "/branchs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()

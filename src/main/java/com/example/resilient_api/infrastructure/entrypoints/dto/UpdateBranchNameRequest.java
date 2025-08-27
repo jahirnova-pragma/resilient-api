@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateSucursalNameRequest {
+public class UpdateBranchNameRequest {
     private String name;
 }

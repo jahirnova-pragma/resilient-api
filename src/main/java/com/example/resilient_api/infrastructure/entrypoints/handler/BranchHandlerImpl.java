@@ -1,10 +1,10 @@
 package com.example.resilient_api.infrastructure.entrypoints.handler;
 
-import com.example.resilient_api.domain.usecase.AddProductoToSucursalUseCase;
-import com.example.resilient_api.domain.model.Sucursal;
-import com.example.resilient_api.domain.usecase.RemoveProductFromSucursalUseCase;
-import com.example.resilient_api.domain.usecase.UpdateSucursalNameUseCase;
-import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateSucursalNameRequest;
+import com.example.resilient_api.domain.model.Branch;
+import com.example.resilient_api.domain.usecase.AddProductToBranchUseCase;
+import com.example.resilient_api.domain.usecase.RemoveProductFromBranchUseCase;
+import com.example.resilient_api.domain.usecase.UpdateBranchNameUseCase;
+import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateBranchNameRequest;
 import com.example.resilient_api.infrastructure.entrypoints.util.APIResponse;
 import com.example.resilient_api.infrastructure.entrypoints.util.ErrorDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,18 +24,18 @@ import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
-public class SucursalHandlerImpl {
+public class BranchHandlerImpl {
 
-    private final AddProductoToSucursalUseCase addProductoToSucursalUseCase;
-    private final RemoveProductFromSucursalUseCase removeProductFromSucursalUseCase;
-    private final UpdateSucursalNameUseCase updateSucursalNameUseCase;
+    private final AddProductToBranchUseCase addProductToBranchUseCase;
+    private final RemoveProductFromBranchUseCase removeProductFromBranchUseCase;
+    private final UpdateBranchNameUseCase updateBranchNameUseCase;
 
     @Operation(
             summary = "Agregar producto a una sucursal",
             description = "Permite agregar un producto existente a una sucursal específica",
             parameters = {
                     @io.swagger.v3.oas.annotations.Parameter(
-                            name = "sucursalId",
+                            name = "branchId",
                             description = "ID de la sucursal",
                             required = true,
                             in = ParameterIn.PATH,
@@ -59,17 +59,17 @@ public class SucursalHandlerImpl {
             }
     )
     public Mono<ServerResponse> addProducto(ServerRequest request) {
-        String sucursalId = request.pathVariable("sucursalId");
+        String branchId = request.pathVariable("branchId");
         String productoId = request.pathVariable("productoId");
 
-        return addProductoToSucursalUseCase.execute(sucursalId, productoId)
-                .flatMap(sucursal -> {
-                    APIResponse<Sucursal> response = APIResponse.<Sucursal>builder()
+        return addProductToBranchUseCase.execute(branchId, productoId)
+                .flatMap(branch -> {
+                    APIResponse<Branch> response = APIResponse.<Branch>builder()
                             .code("200")
                             .message("Producto agregado correctamente")
-                            .identifier(sucursal.getId())
+                            .identifier(branch.getId())
                             .date(LocalDateTime.now().toString())
-                            .data(sucursal)
+                            .data(branch)
                             .build();
                     return ServerResponse.ok()
                             .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class SucursalHandlerImpl {
             description = "Permite remover un producto específico de una sucursal",
             parameters = {
                     @io.swagger.v3.oas.annotations.Parameter(
-                            name = "sucursalId",
+                            name = "branchId",
                             description = "ID de la sucursal",
                             required = true,
                             in = ParameterIn.PATH,
@@ -115,13 +115,13 @@ public class SucursalHandlerImpl {
             }
     )
     public Mono<ServerResponse> removeProduct(ServerRequest request) {
-        String sucursalId = request.pathVariable("sucursalId");
+        String branchId = request.pathVariable("branchId");
         String productId = request.pathVariable("productId");
 
-        return removeProductFromSucursalUseCase.execute(sucursalId, productId)
-                .flatMap(sucursal -> ServerResponse.ok()
+        return removeProductFromBranchUseCase.execute(branchId, productId)
+                .flatMap(branch -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(sucursal))
+                        .bodyValue(branch))
                 .onErrorResume(e -> ServerResponse.status(400)
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(ErrorDTO.builder()
@@ -147,7 +147,7 @@ public class SucursalHandlerImpl {
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = UpdateSucursalNameRequest.class,
+                            schema = @Schema(implementation = UpdateBranchNameRequest.class,
                                     example = "{ \"name\": \"Sucursal ABC\" }")
                     )
             ),
@@ -160,23 +160,23 @@ public class SucursalHandlerImpl {
                             content = @Content)
             }
     )
-    public Mono<ServerResponse> updateSucursalName(ServerRequest request) {
-        String sucursalId = request.pathVariable("id");
+    public Mono<ServerResponse> updateBranchName(ServerRequest request) {
+        String branchId = request.pathVariable("id");
 
-        return request.bodyToMono(UpdateSucursalNameRequest.class)
+        return request.bodyToMono(UpdateBranchNameRequest.class)
                 .flatMap(req -> {
                     if (req.getName() == null || req.getName().isBlank()) {
                         return Mono.error(new IllegalArgumentException("The field 'name' is required"));
                     }
-                    return updateSucursalNameUseCase.execute(sucursalId, req.getName());
+                    return updateBranchNameUseCase.execute(branchId, req.getName());
                 })
-                .flatMap(sucursal -> {
-                    APIResponse<Sucursal> response = APIResponse.<Sucursal>builder()
+                .flatMap(branch -> {
+                    APIResponse<Branch> response = APIResponse.<Branch>builder()
                             .code("200")
                             .message("Sucursal name updated successfully")
-                            .identifier(sucursal.getId())
+                            .identifier(branch.getId())
                             .date(LocalDateTime.now().toString())
-                            .data(sucursal)
+                            .data(branch)
                             .build();
                     return ServerResponse.ok()
                             .contentType(MediaType.APPLICATION_JSON)

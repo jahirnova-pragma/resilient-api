@@ -34,8 +34,8 @@ public class DynamoDBConfig {
     }
 
     @Bean
-    public DynamoDbAsyncTable<SucursalEntity> sucursalTable(DynamoDbEnhancedAsyncClient enhancedAsyncClient) {
-        return enhancedAsyncClient.table("Sucursal", TableSchema.fromBean(SucursalEntity.class));
+    public DynamoDbAsyncTable<BranchEntity> branchTable(DynamoDbEnhancedAsyncClient enhancedAsyncClient) {
+        return enhancedAsyncClient.table("Branch", TableSchema.fromBean(BranchEntity.class));
     }
 
     @Bean

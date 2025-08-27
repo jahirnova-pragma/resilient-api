@@ -2,10 +2,10 @@ package com.example.resilient_api.domain.usecase;
 
 import com.example.resilient_api.domain.model.Franchise;
 import com.example.resilient_api.domain.model.Product;
-import com.example.resilient_api.domain.model.Sucursal;
+import com.example.resilient_api.domain.model.Branch;
 import com.example.resilient_api.domain.model.gateways.FranchiseRepository;
 import com.example.resilient_api.domain.model.gateways.ProductRepository;
-import com.example.resilient_api.domain.model.gateways.SucursalRepository;
+import com.example.resilient_api.domain.model.gateways.BranchRepository;
 import com.example.resilient_api.infrastructure.entrypoints.dto.FranchiseMaxStockDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,22 +32,22 @@ class GetMaxStockPerBranchUseCaseTest {
     private static final int PRODUCT_STOCK_2 = 20;
 
     private FranchiseRepository franchiseRepository;
-    private SucursalRepository sucursalRepository;
+    private BranchRepository branchRepository;
     private ProductRepository productRepository;
     private GetMaxStockPerBranchUseCase useCase;
 
     @BeforeEach
     void setUp() {
         franchiseRepository = mock(FranchiseRepository.class);
-        sucursalRepository = mock(SucursalRepository.class);
+        branchRepository = mock(BranchRepository.class);
         productRepository = mock(ProductRepository.class);
-        useCase = new GetMaxStockPerBranchUseCase(franchiseRepository, sucursalRepository, productRepository);
+        useCase = new GetMaxStockPerBranchUseCase(franchiseRepository, branchRepository, productRepository);
     }
 
     @Test
     void shouldReturnFranchiseWithBranchAndMaxStockProduct() {
         when(franchiseRepository.findById(FRANCHISE_ID)).thenReturn(Mono.just(buildFranchise()));
-        when(sucursalRepository.findByIds(List.of(BRANCH_ID))).thenReturn(Flux.just(buildBranch()));
+        when(branchRepository.findByIds(List.of(BRANCH_ID))).thenReturn(Flux.just(buildBranch()));
         when(productRepository.findByIds(List.of(PRODUCT_ID_1, PRODUCT_ID_2)))
                 .thenReturn(Flux.just(buildProduct(PRODUCT_ID_1, PRODUCT_NAME_1, PRODUCT_STOCK_1),
                         buildProduct(PRODUCT_ID_2, PRODUCT_NAME_2, PRODUCT_STOCK_2)));
@@ -71,12 +71,12 @@ class GetMaxStockPerBranchUseCaseTest {
         return Franchise.builder()
                 .id(FRANCHISE_ID)
                 .nombre(FRANCHISE_NAME)
-                .sucursales(List.of(BRANCH_ID))
+                .branchs(List.of(BRANCH_ID))
                 .build();
     }
 
-    private Sucursal buildBranch() {
-        return Sucursal.builder()
+    private Branch buildBranch() {
+        return Branch.builder()
                 .id(BRANCH_ID)
                 .nombre(BRANCH_NAME)
                 .productos(List.of(PRODUCT_ID_1, PRODUCT_ID_2))

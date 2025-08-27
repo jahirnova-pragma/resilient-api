@@ -2,8 +2,7 @@ package com.example.resilient_api.infrastructure.entrypoints;
 
 import com.example.resilient_api.infrastructure.entrypoints.handler.FranchiseHandlerImpl;
 import com.example.resilient_api.infrastructure.entrypoints.handler.ProductHandlerImpl;
-import com.example.resilient_api.infrastructure.entrypoints.handler.SucursalHandlerImpl;
-import com.example.resilient_api.infrastructure.entrypoints.handler.SucursalHandlerImplTest;
+import com.example.resilient_api.infrastructure.entrypoints.handler.BranchHandlerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ class ApiRouterTest {
 
     private static final String BASE_FRANCHISE = "/franchises";
     private static final String BASE_PRODUCTS = "/products";
-    private static final String BASE_BRANCHES = "/sucursales";
+    private static final String BASE_BRANCHES = "/branchs";
     private static final String FRANCHISE_ID = "FRA-123";
     private static final String PRODUCT_ID = "PRO-456";
     private static final String BRANCH_ID = "SUC-789";
@@ -40,7 +39,7 @@ class ApiRouterTest {
     private ProductHandlerImpl productHandler;
 
     @MockBean
-    private SucursalHandlerImpl sucursalHandler;
+    private BranchHandlerImpl branchHandler;
 
     @BeforeEach
     void setup() {
@@ -53,8 +52,8 @@ class ApiRouterTest {
     }
 
     @Test
-    void shouldRouteToAddSucursalToFranchise() {
-        post(BASE_FRANCHISE + "/" + FRANCHISE_ID + "/sucursales").expectStatus().isOk();
+    void shouldRouteToAddBranchToFranchise() {
+        post(BASE_FRANCHISE + "/" + FRANCHISE_ID + "/branchs").expectStatus().isOk();
     }
 
     @Test
@@ -94,16 +93,16 @@ class ApiRouterTest {
 
     private void mockAllHandlers() {
         when(franchiseHandler.createFranchise(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
-        when(franchiseHandler.addSucursalToFranchise(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
+        when(franchiseHandler.addBranchToFranchise(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
         when(franchiseHandler.getMaxStockPerBranch(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
         when(franchiseHandler.updateFranchiseName(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
 
         when(productHandler.updateStock(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
         when(productHandler.updateProductName(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
 
-        when(sucursalHandler.addProducto(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
-        when(sucursalHandler.removeProduct(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
-        when(sucursalHandler.updateSucursalName(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
+        when(branchHandler.addProducto(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
+        when(branchHandler.removeProduct(any())).thenReturn(Mono.just(ServerResponse.ok().build().block()));
+        when(branchHandler.updateBranchName((any())).thenReturn(Mono.just(ServerResponse.ok().build().block())));
     }
 
     private WebTestClient.ResponseSpec get(String uri) {

@@ -18,7 +18,7 @@ public class FranchiseEntity {
 
     private String id;
     private String nombre;
-    private List<String> sucursales;
+    private List<String> branchs;
 
     @DynamoDbPartitionKey
     public String getId() {

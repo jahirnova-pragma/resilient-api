@@ -1,17 +1,17 @@
 package com.example.resilient_api.application.config;
 
 import com.example.resilient_api.domain.model.gateways.ProductRepository;
-import com.example.resilient_api.domain.model.gateways.SucursalRepository;
-import com.example.resilient_api.domain.usecase.AddProductoToSucursalUseCase;
-import com.example.resilient_api.domain.usecase.AddSucursalToFranchiseUseCase;
+import com.example.resilient_api.domain.model.gateways.BranchRepository;
+import com.example.resilient_api.domain.usecase.AddProductToBranchUseCase;
+import com.example.resilient_api.domain.usecase.AddBranchToFranchiseUseCase;
 import com.example.resilient_api.domain.usecase.CreateFranchiseUseCase;
 import com.example.resilient_api.domain.model.gateways.FranchiseRepository;
 import com.example.resilient_api.domain.usecase.GetMaxStockPerBranchUseCase;
-import com.example.resilient_api.domain.usecase.RemoveProductFromSucursalUseCase;
+import com.example.resilient_api.domain.usecase.RemoveProductFromBranchUseCase;
 import com.example.resilient_api.domain.usecase.UpdateFranchiseNameUseCase;
 import com.example.resilient_api.domain.usecase.UpdateProductNameUseCase;
 import com.example.resilient_api.domain.usecase.UpdateProductStockUseCase;
-import com.example.resilient_api.domain.usecase.UpdateSucursalNameUseCase;
+import com.example.resilient_api.domain.usecase.UpdateBranchNameUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,18 +24,18 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public AddSucursalToFranchiseUseCase addSucursalToFranchiseUseCase(FranchiseRepository repository) {
-        return new AddSucursalToFranchiseUseCase(repository);
+    public AddBranchToFranchiseUseCase addBranchToFranchiseUseCase(FranchiseRepository repository) {
+        return new AddBranchToFranchiseUseCase(repository);
     }
 
     @Bean
-    public AddProductoToSucursalUseCase addProductToSucursalUseCase(SucursalRepository repository) {
-        return new AddProductoToSucursalUseCase(repository);
+    public AddProductToBranchUseCase addProductToBranchUseCase(BranchRepository repository) {
+        return new AddProductToBranchUseCase(repository);
     }
 
     @Bean
-    public RemoveProductFromSucursalUseCase removeProductFromSucursalUseCase(SucursalRepository repository) {
-        return new RemoveProductFromSucursalUseCase(repository);
+    public RemoveProductFromBranchUseCase removeProductFromBranchUseCase(BranchRepository repository) {
+        return new RemoveProductFromBranchUseCase(repository);
     }
 
     @Bean
@@ -45,9 +45,9 @@ public class UseCaseConfig {
 
     @Bean
     public GetMaxStockPerBranchUseCase getMaxStockPerBranchUseCase(FranchiseRepository franchiseRepository,
-                                                                   SucursalRepository sucursalRepository,
+                                                                   BranchRepository branchRepository,
                                                                    ProductRepository productRepository) {
-        return new GetMaxStockPerBranchUseCase(franchiseRepository,sucursalRepository, productRepository);
+        return new GetMaxStockPerBranchUseCase(franchiseRepository, branchRepository, productRepository);
     }
 
     @Bean
@@ -56,8 +56,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public UpdateSucursalNameUseCase updateSucursalNameUseCase(SucursalRepository repository) {
-        return new UpdateSucursalNameUseCase(repository);
+    public UpdateBranchNameUseCase updateBranchNameUseCase(BranchRepository repository) {
+        return new UpdateBranchNameUseCase(repository);
     }
 
     @Bean

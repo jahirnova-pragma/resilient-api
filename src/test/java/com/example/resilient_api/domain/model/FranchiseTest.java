@@ -10,21 +10,21 @@ class FranchiseTest {
 
     private static final String ID = "SUC-01";
     private static final String NOMBRE = "Franquicia Test";
-    private static final List<String> SUCURSALES = List.of("Sucursal1", "Sucursal2");
+    private static final List<String> BRANCHS = List.of("Sucursal1", "Sucursal2");
     private static final String NEW_NOMBRE = "Franquicia Actualizada";
 
     @Test
     void shouldBuildFranchiseWithValues() {
-        Franchise franchise = buildFranchise(ID, NOMBRE, SUCURSALES);
+        Franchise franchise = buildFranchise(ID, NOMBRE, BRANCHS);
 
         assertThat(franchise.getId()).isEqualTo(ID);
         assertThat(franchise.getNombre()).isEqualTo(NOMBRE);
-        assertThat(franchise.getSucursales()).containsExactlyElementsOf(SUCURSALES);
+        assertThat(franchise.getBranchs()).containsExactlyElementsOf(BRANCHS);
     }
 
     @Test
     void shouldUseToBuilderToModifyValues() {
-        Franchise updatedFranchise = buildFranchise(ID, NOMBRE, SUCURSALES)
+        Franchise updatedFranchise = buildFranchise(ID, NOMBRE, BRANCHS)
                 .toBuilder()
                 .nombre(NEW_NOMBRE)
                 .build();
@@ -34,11 +34,11 @@ class FranchiseTest {
     }
 
 
-    private Franchise buildFranchise(String id, String nombre, List<String> sucursales) {
+    private Franchise buildFranchise(String id, String nombre, List<String> branchs) {
         return Franchise.builder()
                 .id(id)
                 .nombre(nombre)
-                .sucursales(sucursales)
+                .branchs(branchs)
                 .build();
     }
 }

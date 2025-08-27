@@ -140,12 +140,12 @@ cd resilient_api
 {
   "id": "fran-001",
   "name": "Franquicia ABC",
-  "sucursales": []
+  "branchs": []
 }
 ```
 
-#### Agregar sucursal
-- **POST** `/franchises/{id}/sucursales`
+#### Agregar branch
+- **POST** `/franchises/{id}/branchs`
 - **Request:**
 ```json
 {
@@ -168,7 +168,7 @@ cd resilient_api
   "productId": "prod-123",
   "name": "Producto X",
   "stock": 500,
-  "sucursalId": "suc-001"
+  "branchId": "suc-001"
 }
 ```
 
@@ -222,18 +222,18 @@ cd resilient_api
 
 ### Sucursales
 
-#### Agregar producto a una sucursal
-- **POST** `/sucursales/{sucursalId}/productos/{productoId}`
+#### Agregar producto a una branch
+- **POST** `/branchs/{branchId}/products/{productoId}`
 - **Response 200:**
 ```json
 {
-  "sucursalId": "suc-001",
+  "branchId": "suc-001",
   "productoId": "prod-123"
 }
 ```
 
-#### Eliminar producto de una sucursal
-- **DELETE** `/sucursales/{sucursalId}/productos/{productoId}`
+#### Eliminar producto de una branch
+- **DELETE** `/branchs/{branchId}/products/{productoId}`
 - **Response 200:**
 ```json
 {
@@ -241,8 +241,8 @@ cd resilient_api
 }
 ```
 
-#### Actualizar nombre de sucursal
-- **PATCH** `/sucursales/{id}`
+#### Actualizar nombre de branch
+- **PATCH** `/branchs/{id}`
 - **Request:**
 ```json
 {

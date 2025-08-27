@@ -2,10 +2,10 @@ package com.example.resilient_api.infrastructure.entrypoints.handler;
 
 import com.example.resilient_api.domain.model.Franchise;
 import com.example.resilient_api.domain.usecase.CreateFranchiseUseCase;
-import com.example.resilient_api.domain.usecase.AddSucursalToFranchiseUseCase;
+import com.example.resilient_api.domain.usecase.AddBranchToFranchiseUseCase;
 import com.example.resilient_api.domain.usecase.GetMaxStockPerBranchUseCase;
 import com.example.resilient_api.domain.usecase.UpdateFranchiseNameUseCase;
-import com.example.resilient_api.infrastructure.entrypoints.dto.AddSucursalRequest;
+import com.example.resilient_api.infrastructure.entrypoints.dto.Branch;
 import com.example.resilient_api.infrastructure.entrypoints.dto.FranchiseMaxStockDTO;
 import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateFranchiseNameRequest;
 import com.example.resilient_api.infrastructure.entrypoints.util.APIResponse;
@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 public class FranchiseHandlerImpl {
 
     private final CreateFranchiseUseCase createFranchiseUseCase;
-    private final AddSucursalToFranchiseUseCase addSucursalToFranchiseUseCase;
+    private final AddBranchToFranchiseUseCase addBranchToFranchiseUseCase;
     private final GetMaxStockPerBranchUseCase getMaxStockPerBranchUseCase;
     private final UpdateFranchiseNameUseCase updateFranchiseNameUseCase;
 
@@ -105,8 +105,8 @@ public class FranchiseHandlerImpl {
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = AddSucursalRequest.class,
-                                    example = "{ \"sucursalId\": \"Sucursal1\" }")
+                            schema = @Schema(implementation = Branch.class,
+                                    example = "{ \"branchId\": \"Sucursal1\" }")
                     )
             ),
             responses = {
@@ -118,15 +118,15 @@ public class FranchiseHandlerImpl {
                             content = @Content)
             }
     )
-    public Mono<ServerResponse> addSucursalToFranchise(ServerRequest request) {
+    public Mono<ServerResponse> addBranchToFranchise(ServerRequest request) {
         String franchiseId = request.pathVariable("id");
 
-        return request.bodyToMono(AddSucursalRequest.class)
+        return request.bodyToMono(Branch.class)
                 .flatMap(req -> {
-                    if (req.getSucursalId() == null || req.getSucursalId().isBlank()) {
-                        return Mono.error(new IllegalArgumentException("El campo 'sucursalId' es obligatorio"));
+                    if (req.getBranchId() == null || req.getBranchId().isBlank()) {
+                        return Mono.error(new IllegalArgumentException("El campo 'branchId' es obligatorio"));
                     }
-                    return addSucursalToFranchiseUseCase.execute(franchiseId, req.getSucursalId());
+                    return addBranchToFranchiseUseCase.execute(franchiseId, req.getBranchId());
                 })
                 .flatMap(franchise -> {
                     APIResponse<Franchise> ok = APIResponse.<Franchise>builder()
@@ -229,7 +229,7 @@ public class FranchiseHandlerImpl {
                 .onErrorResume(e -> {
                     APIResponse<Void> errorResponse = APIResponse.<Void>builder()
                             .code("500")
-                            .message("Error retrieving max stock per branch")
+                            .message("Error retrieving max stock per branch : "+ e.getMessage())
                             .identifier(franchiseId)
                             .date(LocalDateTime.now().toString())
                             .build();

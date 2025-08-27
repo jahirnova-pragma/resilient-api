@@ -13,51 +13,51 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-class AddSucursalToFranchiseUseCaseTest {
+class AddBranchToFranchiseUseCaseTest {
 
     private static final String FRANCHISE_ID = "FRANCHISE-001";
-    private static final String SUCURSAL_ID = "SUC-001";
+    private static final String BRANCH_ID = "SUC-001";
     private static final String ERROR_MESSAGE = "Franquicia no encontrada con id: " + FRANCHISE_ID;
 
     private FranchiseRepository franchiseRepository;
-    private AddSucursalToFranchiseUseCase useCase;
+    private AddBranchToFranchiseUseCase useCase;
 
     @BeforeEach
     void setUp() {
         franchiseRepository = mock(FranchiseRepository.class);
-        useCase = new AddSucursalToFranchiseUseCase(franchiseRepository);
+        useCase = new AddBranchToFranchiseUseCase(franchiseRepository);
     }
 
     @Test
-    void shouldAddSucursalWhenNotPresent() {
+    void shouldAddBranchWhenNotPresent() {
         Franchise franchise = buildFranchise();
         when(franchiseRepository.findById(FRANCHISE_ID)).thenReturn(Mono.just(franchise));
         when(franchiseRepository.save(any(Franchise.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        Mono<Franchise> result = useCase.execute(FRANCHISE_ID, SUCURSAL_ID);
+        Mono<Franchise> result = useCase.execute(FRANCHISE_ID, BRANCH_ID);
 
         StepVerifier.create(result)
                 .assertNext(updatedFranchise -> {
-                    assertThat(updatedFranchise.getSucursales()).contains(SUCURSAL_ID);
+                    assertThat(updatedFranchise.getBranchs()).contains(BRANCH_ID);
                 })
                 .verifyComplete();
 
         ArgumentCaptor<Franchise> captor = ArgumentCaptor.forClass(Franchise.class);
         verify(franchiseRepository).save(captor.capture());
-        assertThat(captor.getValue().getSucursales()).contains(SUCURSAL_ID);
+        assertThat(captor.getValue().getBranchs()).contains(BRANCH_ID);
     }
 
     @Test
-    void shouldNotDuplicateSucursal() {
-        Franchise franchise = buildFranchiseWithSucursal();
+    void shouldNotDuplicateBranch() {
+        Franchise franchise = buildFranchiseWithBranch();
         when(franchiseRepository.findById(FRANCHISE_ID)).thenReturn(Mono.just(franchise));
         when(franchiseRepository.save(any(Franchise.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        Mono<Franchise> result = useCase.execute(FRANCHISE_ID, SUCURSAL_ID);
+        Mono<Franchise> result = useCase.execute(FRANCHISE_ID, BRANCH_ID);
 
         StepVerifier.create(result)
                 .assertNext(updatedFranchise -> {
-                    assertThat(updatedFranchise.getSucursales()).hasSize(1).containsExactly(SUCURSAL_ID);
+                    assertThat(updatedFranchise.getBranchs()).hasSize(1).containsExactly(BRANCH_ID);
                 })
                 .verifyComplete();
     }
@@ -66,7 +66,7 @@ class AddSucursalToFranchiseUseCaseTest {
     void shouldReturnErrorWhenFranchiseNotFound() {
         when(franchiseRepository.findById(FRANCHISE_ID)).thenReturn(Mono.empty());
 
-        Mono<Franchise> result = useCase.execute(FRANCHISE_ID, SUCURSAL_ID);
+        Mono<Franchise> result = useCase.execute(FRANCHISE_ID, BRANCH_ID);
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(error -> assertThat(error)
@@ -79,15 +79,15 @@ class AddSucursalToFranchiseUseCaseTest {
         return Franchise.builder()
                 .id(FRANCHISE_ID)
                 .nombre("Test Franchise")
-                .sucursales(Collections.emptyList())
+                .branchs(Collections.emptyList())
                 .build();
     }
 
-    private Franchise buildFranchiseWithSucursal() {
+    private Franchise buildFranchiseWithBranch() {
         return Franchise.builder()
                 .id(FRANCHISE_ID)
                 .nombre("Test Franchise")
-                .sucursales(Collections.singletonList(SUCURSAL_ID))
+                .branchs(Collections.singletonList(BRANCH_ID))
                 .build();
     }
 }

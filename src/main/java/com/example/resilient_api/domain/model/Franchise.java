@@ -14,5 +14,5 @@ import java.util.List;
 public class Franchise {
     private String id;
     private String nombre;
-    private List<String> sucursales;
+    private List<String> branchs;
 }

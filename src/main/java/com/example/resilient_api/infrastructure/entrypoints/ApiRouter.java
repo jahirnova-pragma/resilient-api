@@ -1,13 +1,13 @@
 package com.example.resilient_api.infrastructure.entrypoints;
 
 import com.example.resilient_api.domain.model.Franchise;
-import com.example.resilient_api.infrastructure.entrypoints.dto.AddSucursalRequest;
+import com.example.resilient_api.infrastructure.entrypoints.dto.Branch;
 import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateFranchiseNameRequest;
 import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateProductNameRequest;
-import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateSucursalNameRequest;
+import com.example.resilient_api.infrastructure.entrypoints.dto.UpdateBranchNameRequest;
 import com.example.resilient_api.infrastructure.entrypoints.handler.FranchiseHandlerImpl;
 import com.example.resilient_api.infrastructure.entrypoints.handler.ProductHandlerImpl;
-import com.example.resilient_api.infrastructure.entrypoints.handler.SucursalHandlerImpl;
+import com.example.resilient_api.infrastructure.entrypoints.handler.BranchHandlerImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,9 +52,9 @@ public class ApiRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/franchises/{id}/sucursales",
+                    path = "/franchises/{id}/branchs",
                     beanClass = FranchiseHandlerImpl.class,
-                    beanMethod = "addSucursalToFranchise",
+                    beanMethod = "addBranchToFranchise",
                     operation = @Operation(
                             summary = "Agregar sucursal",
                             parameters = {
@@ -65,7 +65,7 @@ public class ApiRouter {
                                     required = true,
                                     content = @Content(
                                             mediaType = "application/json",
-                                            schema = @Schema(implementation = AddSucursalRequest.class)
+                                            schema = @Schema(implementation = Branch.class)
                                     )
                             )
                     )
@@ -150,16 +150,16 @@ public class ApiRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/sucursales/{sucursalId}/productos/{productoId}",
+                    path = "/branchs/{branchId}/productos/{productoId}",
                     method = RequestMethod.POST,
-                    beanClass = SucursalHandlerImpl.class,
+                    beanClass = BranchHandlerImpl.class,
                     beanMethod = "addProducto",
                     operation = @Operation(
                             summary = "Agregar producto a una sucursal",
                             description = "Permite agregar un producto existente a una sucursal específica",
                             parameters = {
                                     @Parameter(
-                                            name = "sucursalId",
+                                            name = "branchId",
                                             description = "ID de la sucursal",
                                             required = true
                                     ),
@@ -172,16 +172,16 @@ public class ApiRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/sucursales/{sucursalId}/productos/{productoId}",
+                    path = "/branchs/{branchId}/productos/{productoId}",
                     method = RequestMethod.DELETE,
-                    beanClass = SucursalHandlerImpl.class,
+                    beanClass = BranchHandlerImpl.class,
                     beanMethod = "removeProduct",
                     operation = @Operation(
                             summary = "Eliminar producto de una sucursal",
                             description = "Permite remover un producto específico de una sucursal",
                             parameters = {
                                     @Parameter(
-                                            name = "sucursalId",
+                                            name = "branchId",
                                             description = "ID de la sucursal",
                                             required = true
                                     ),
@@ -194,9 +194,9 @@ public class ApiRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/sucursales/{id}",
-                    beanClass = SucursalHandlerImpl.class,
-                    beanMethod = "updateSucursalName",
+                    path = "/branchs/{id}",
+                    beanClass = BranchHandlerImpl.class,
+                    beanMethod = "updateBranchName",
                     operation = @Operation(
                             summary = "Actualizar nombre de una sucursal",
                             description = "Permite cambiar el nombre de una sucursal existente",
@@ -212,7 +212,7 @@ public class ApiRouter {
                                     required = true,
                                     content = @Content(
                                             mediaType = "application/json",
-                                            schema = @Schema(implementation = UpdateSucursalNameRequest.class,
+                                            schema = @Schema(implementation = UpdateBranchNameRequest.class,
                                                     example = "{ \"name\": \"Sucursal ABC\" }")
                                     )
                             )
@@ -222,18 +222,18 @@ public class ApiRouter {
     public RouterFunction<ServerResponse> apiRoutes(
             FranchiseHandlerImpl franchiseHandler,
             ProductHandlerImpl productHandler,
-            SucursalHandlerImpl sucursalHandler) {
+            BranchHandlerImpl branchHandler) {
 
         return route(POST("/franchises").and(accept(MediaType.APPLICATION_JSON)), franchiseHandler::createFranchise)
-                .andRoute(POST("/franchises/{id}/sucursales").and(accept(MediaType.APPLICATION_JSON)), franchiseHandler::addSucursalToFranchise)
+                .andRoute(POST("/franchises/{id}/branchs").and(accept(MediaType.APPLICATION_JSON)), franchiseHandler::addBranchToFranchise)
                 .andRoute(GET("/franchises/{id}/max-stock").and(accept(MediaType.APPLICATION_JSON)), franchiseHandler::getMaxStockPerBranch)
                 .andRoute(PATCH("/franchises/{id}").and(accept(MediaType.APPLICATION_JSON)), franchiseHandler::updateFranchiseName)
 
                 .andRoute(PUT("/products/{productId}/stock/{stock}").and(accept(MediaType.APPLICATION_JSON)), productHandler::updateStock)
                 .andRoute(PATCH("/products/{id}").and(accept(MediaType.APPLICATION_JSON)), productHandler::updateProductName)
 
-                .andRoute(POST("/sucursales/{sucursalId}/productos/{productoId}").and(accept(MediaType.APPLICATION_JSON)), sucursalHandler::addProducto)
-                .andRoute(DELETE("/sucursales/{sucursalId}/productos/{productId}").and(accept(MediaType.APPLICATION_JSON)), sucursalHandler::removeProduct)
-                .andRoute(PATCH("/sucursales/{id}").and(accept(MediaType.APPLICATION_JSON)), sucursalHandler::updateSucursalName);
+                .andRoute(POST("/branchs/{branchId}/products/{productoId}").and(accept(MediaType.APPLICATION_JSON)), branchHandler::addProducto)
+                .andRoute(DELETE("/branchs/{branchId}/products/{productId}").and(accept(MediaType.APPLICATION_JSON)), branchHandler::removeProduct)
+                .andRoute(PATCH("/branchs/{id}").and(accept(MediaType.APPLICATION_JSON)), branchHandler::updateBranchName);
     }
 }
