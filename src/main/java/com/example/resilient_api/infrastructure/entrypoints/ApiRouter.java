@@ -34,8 +34,7 @@ public class ApiRouter {
 
     @Bean
     @RouterOperations({
-            // Franchise
-            // Franchise
+
             @RouterOperation(
                     path = "/franchises",
                     beanClass = FranchiseHandlerImpl.class,
@@ -101,7 +100,6 @@ public class ApiRouter {
                             )
                     )
             ),
-            // Products
             @RouterOperation(
                     path = "/products/{productId}/stock/{stock}",
                     beanClass = ProductHandlerImpl.class,
@@ -151,7 +149,6 @@ public class ApiRouter {
                             )
                     )
             ),
-            // Sucursales
             @RouterOperation(
                     path = "/sucursales/{sucursalId}/productos/{productoId}",
                     method = RequestMethod.POST,
