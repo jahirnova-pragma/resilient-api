@@ -150,7 +150,7 @@ public class ApiRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/branchs/{branchId}/productos/{productoId}",
+                    path = "/branchs/{branchId}/products/{productoId}",
                     method = RequestMethod.POST,
                     beanClass = BranchHandlerImpl.class,
                     beanMethod = "addProducto",
@@ -172,7 +172,7 @@ public class ApiRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/branchs/{branchId}/productos/{productoId}",
+                    path = "/branchs/{branchId}/products/{productoId}",
                     method = RequestMethod.DELETE,
                     beanClass = BranchHandlerImpl.class,
                     beanMethod = "removeProduct",
@@ -231,8 +231,8 @@ public class ApiRouter {
 
                 .andRoute(PUT("/products/{productId}/stock/{stock}").and(accept(MediaType.APPLICATION_JSON)), productHandler::updateStock)
                 .andRoute(PATCH("/products/{id}").and(accept(MediaType.APPLICATION_JSON)), productHandler::updateProductName)
-
                 .andRoute(POST("/branchs/{branchId}/products/{productoId}").and(accept(MediaType.APPLICATION_JSON)), branchHandler::addProducto)
+
                 .andRoute(DELETE("/branchs/{branchId}/products/{productId}").and(accept(MediaType.APPLICATION_JSON)), branchHandler::removeProduct)
                 .andRoute(PATCH("/branchs/{id}").and(accept(MediaType.APPLICATION_JSON)), branchHandler::updateBranchName);
     }

@@ -95,14 +95,14 @@ public class BranchHandlerImpl {
                             description = "ID de la sucursal",
                             required = true,
                             in = ParameterIn.PATH,
-                            example = "SUC-001"
+                            example = "SUC-01"
                     ),
                     @io.swagger.v3.oas.annotations.Parameter(
                             name = "productoId",
                             description = "ID del producto a eliminar",
                             required = true,
                             in = ParameterIn.PATH,
-                            example = "PROD-001"
+                            example = "PROD-01-01"
                     )
             },
             responses = {

@@ -78,12 +78,12 @@ class ApiRouterTest {
 
     @Test
     void shouldRouteToAddProductToBranch() {
-        post(BASE_BRANCHES + "/" + BRANCH_ID + "/productos/" + PRODUCT_ID).expectStatus().isOk();
+        post(BASE_BRANCHES + "/" + BRANCH_ID + "/products/" + PRODUCT_ID).expectStatus().isOk();
     }
 
     @Test
     void shouldRouteToRemoveProductFromBranch() {
-        delete(BASE_BRANCHES + "/" + BRANCH_ID + "/productos/" + PRODUCT_ID).expectStatus().isOk();
+        delete(BASE_BRANCHES + "/" + BRANCH_ID + "/products/" + PRODUCT_ID).expectStatus().isOk();
     }
 
     @Test

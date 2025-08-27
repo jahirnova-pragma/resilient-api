@@ -46,8 +46,8 @@ public class BranchHandlerImplTest {
         MockitoAnnotations.openMocks(this);
         webTestClient = WebTestClient.bindToRouterFunction(
                 RouterFunctions.route()
-                        .POST("/branchs/{branchId}/productos/{productoId}", branchHandler::addProducto)
-                        .DELETE("/branchs/{branchId}/productos/{productId}", branchHandler::removeProduct)
+                        .POST("/branchs/{branchId}/products/{productoId}", branchHandler::addProducto)
+                        .DELETE("/branchs/{branchId}/products/{productId}", branchHandler::removeProduct)
                         .PATCH("/branchs/{id}", branchHandler::updateBranchName)
                         .build()
         ).build();
@@ -64,7 +64,7 @@ public class BranchHandlerImplTest {
         when(addProductToBranchUseCase.execute(BRANCH_ID, PRODUCT_ID)).thenReturn(Mono.just(branch));
 
         webTestClient.post()
-                .uri("/branchs/{branchId}/productos/{productoId}", BRANCH_ID, PRODUCT_ID)
+                .uri("/branchs/{branchId}/products/{productoId}", BRANCH_ID, PRODUCT_ID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -78,7 +78,7 @@ public class BranchHandlerImplTest {
                 .thenReturn(Mono.error(new RuntimeException("DB error")));
 
         webTestClient.post()
-                .uri("/branchs/{branchId}/productos/{productoId}", BRANCH_ID, PRODUCT_ID)
+                .uri("/branchs/{branchId}/products/{productoId}", BRANCH_ID, PRODUCT_ID)
                 .exchange()
                 .expectStatus().is5xxServerError()
                 .expectBody()
@@ -93,7 +93,7 @@ public class BranchHandlerImplTest {
         when(removeProductFromBranchUseCase.execute(BRANCH_ID, PRODUCT_ID)).thenReturn(Mono.just(branch));
 
         webTestClient.delete()
-                .uri("/branchs/{branchId}/productos/{productId}", BRANCH_ID, PRODUCT_ID)
+                .uri("/branchs/{branchId}/products/{productId}", BRANCH_ID, PRODUCT_ID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -106,7 +106,7 @@ public class BranchHandlerImplTest {
                 .thenReturn(Mono.error(new IllegalArgumentException("Product not found")));
 
         webTestClient.delete()
-                .uri("/branchs/{branchId}/productos/{productId}", BRANCH_ID, PRODUCT_ID)
+                .uri("/branchs/{branchId}/products/{productId}", BRANCH_ID, PRODUCT_ID)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
